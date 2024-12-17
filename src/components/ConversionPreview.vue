@@ -44,7 +44,7 @@ onUnmounted(() => {
       </div>
 
       <div>
-        <h3 class="text-lg font-medium mb-4">Vectorized</h3>
+        <h3 class="text-lg font-medium mb-4">Vexiform</h3>
         <div class="aspect-square rounded-lg overflow-hidden bg-slate-800">
           <div v-if="conversionResult?.svg" class="w-full h-full flex items-center justify-center bg-white">
             <div v-html="conversionResult.svg" class="w-full h-full"></div>

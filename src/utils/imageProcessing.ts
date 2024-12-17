@@ -142,7 +142,7 @@ export function convertSvgToEps(svg: string): string {
   const epsHeader = `%!PS-Adobe-3.0 EPSF-3.0
 %%BoundingBox: 0 0 ${width} ${height}
 %%HiResBoundingBox: 0 0 ${width} ${height}
-%%Creator: VectorizeAI
+%%Creator: Vexiform
 %%Title: Converted Vector Image
 %%DocumentData: Clean7Bit
 %%LanguageLevel: 2

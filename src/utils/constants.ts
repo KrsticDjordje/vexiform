@@ -9,7 +9,7 @@ export const FEATURES = [
   },
   {
     title: 'Real-time Preview',
-    description: 'See your vectorized image instantly with our live preview feature.',
+    description: 'See your vexiform image instantly with our live preview feature.',
     icon: '👁️'
   },
   {
