@@ -11,8 +11,8 @@ export function useImageConversion() {
     error.value = null
 
     try {
-      const buffer = await processImage(file)
-      const svg = await convertToSvg(buffer)
+      const svgData = await processImage(file)
+      const svg = await convertToSvg(svgData)
 
       return {
         svg,

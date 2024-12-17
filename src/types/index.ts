@@ -4,11 +4,4 @@ export interface Feature {
   icon: string;
 }
 
-export interface ConversionResult {
-  svg: string;
-  previewUrl: string;
-}
-
-export type ExportFormat = 'svg' | 'eps';
-
-export type ProcessingMode = 'vectorize' | 'metadata';
+export type ProcessingMode = 'metadata';
