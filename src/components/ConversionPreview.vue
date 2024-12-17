@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import Button from './ui/Button.vue'
+import ImageMetadata from './ImageMetadata.vue'
 import type { ConversionResult, ExportFormat } from '../types'
 import { createObjectURL, revokeObjectURL } from '../utils/imageProcessing'
 
@@ -55,6 +56,10 @@ onUnmounted(() => {
           </div>
         </div>
       </div>
+    </div>
+
+    <div class="mt-8">
+      <ImageMetadata :file="originalImage" />
     </div>
 
     <div class="mt-6 flex gap-4">

@@ -10,3 +10,5 @@ export interface ConversionResult {
 }
 
 export type ExportFormat = 'svg' | 'eps';
+
+export type ProcessingMode = 'vectorize' | 'metadata';

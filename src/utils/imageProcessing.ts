@@ -1,4 +1,4 @@
-import { Jimp } from 'jimp'
+import Jimp from 'jimp'
 
 interface ScanContext {
   bitmap: {
@@ -26,7 +26,11 @@ export async function convertToSvg(buffer: Buffer): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
       const Potrace = await import('potrace')
-      const image = await Jimp.read(buffer)
+      const image = await new Promise((resolve, reject) => {
+        Jimp.read(buffer)
+          .then(image => resolve(image))
+          .catch(err => reject(err))
+      })
 
       const MAX_SIZE = 1000
       if (image.bitmap.width > MAX_SIZE || image.bitmap.height > MAX_SIZE) {
