@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0F172A;
+  color: #F8FAFC;
+  margin: 0;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+}
+
+.neo-button {
+  background: #1E293B;
+  box-shadow: 8px 8px 16px #0D1525,
+              -8px -8px 16px #2F3B51;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.neo-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 12px 12px 20px #0D1525,
+              -12px -12px 20px #2F3B51;
+}
