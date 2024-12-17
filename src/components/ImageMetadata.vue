@@ -17,12 +17,17 @@ interface ImageMetadata {
     aspectRatio: string
     colorSpace: string
     orientation: string
+    resolution?: string
+    colorDepth?: string
 
     // Fotografski podaci
     camera?: string
     make?: string
     model?: string
     software?: string
+    lens?: string
+    copyright?: string
+    artist?: string
 
     // Parametri fotografisanja
     exposureTime?: string
@@ -30,17 +35,30 @@ interface ImageMetadata {
     iso?: string
     focalLength?: string
     flash?: string
+    meteringMode?: string
+    whiteBalance?: string
+    exposureProgram?: string
+    exposureCompensation?: string
+    focusMode?: string
+    digitalZoom?: string
+    shootingMode?: string
 
     // GPS podaci
     gpsLatitude?: string
     gpsLongitude?: string
     gpsAltitude?: string
+    gpsTimestamp?: string
+    gpsDirection?: string
+    locationName?: string
 
     // Tehnički detalji
     bitsPerSample?: string
     compression: string
     category: string
     format: string
+    quality?: string
+    rawFormat?: string
+    histogram?: string
 }
 
 const props = defineProps<{
@@ -83,7 +101,11 @@ const extractMetadata = async (file: File) => {
                 file.type.includes('png') ? 'PNG' :
                     file.type.includes('gif') ? 'GIF' : 'Unknown',
             category: 'Image',
-            format: file.type.split('/')[1].toUpperCase()
+            format: file.type.split('/')[1].toUpperCase(),
+            resolution: 'Unknown',
+            colorDepth: 'Unknown',
+            quality: 'Unknown',
+            histogram: 'Not available'
         }
 
         metadata.value = basicMetadata
@@ -107,15 +129,29 @@ const extractMetadata = async (file: File) => {
                                     make: 'Unknown',
                                     model: 'Unknown',
                                     software: 'Unknown',
+                                    lens: 'Unknown',
+                                    copyright: 'Unknown',
+                                    artist: 'Unknown',
                                     exposureTime: 'Unknown',
                                     aperture: 'Unknown',
                                     iso: 'Unknown',
                                     focalLength: 'Unknown',
                                     flash: 'Unknown',
+                                    meteringMode: 'Unknown',
+                                    whiteBalance: 'Unknown',
+                                    exposureProgram: 'Unknown',
+                                    exposureCompensation: 'Unknown',
+                                    focusMode: 'Unknown',
+                                    digitalZoom: 'Unknown',
+                                    shootingMode: 'Unknown',
                                     gpsLatitude: 'Not available',
                                     gpsLongitude: 'Not available',
                                     gpsAltitude: 'Not available',
-                                    bitsPerSample: 'Unknown'
+                                    gpsTimestamp: 'Not available',
+                                    gpsDirection: 'Not available',
+                                    locationName: 'Not available',
+                                    bitsPerSample: 'Unknown',
+                                    rawFormat: 'Not applicable'
                                 }
 
                                 metadata.value = {
@@ -161,7 +197,7 @@ const extractMetadata = async (file: File) => {
     }
 }
 
-watch(() => props.file, (newFile) => {
+watch(() => props.file, (newFile: File | null) => {
     if (newFile) {
         extractMetadata(newFile)
     } else {
@@ -197,7 +233,7 @@ watch(() => props.file, (newFile) => {
                         :key="key"
                         class="grid grid-cols-2 gap-4 py-2 border-b border-slate-700/50 last:border-0 hover:bg-slate-700/20 rounded transition-colors">
                         <div class="text-slate-400 font-medium">
-                            {{ typeof key === 'string' ? key.replace(/([A-Z])/g, ' $1').trim() : key }}
+                            {{ key.replace(/([A-Z])/g, ' $1').trim() }}
                         </div>
                         <div class="text-slate-300">{{ metadata[key as keyof ImageMetadata] }}</div>
                     </div>
@@ -215,11 +251,11 @@ watch(() => props.file, (newFile) => {
                     Image Properties
                 </h4>
                 <div class="space-y-2">
-                    <div v-for="key in ['dimensions', 'width', 'height', 'aspectRatio', 'colorSpace', 'orientation']"
+                    <div v-for="key in ['dimensions', 'width', 'height', 'aspectRatio', 'colorSpace', 'orientation', 'resolution', 'colorDepth']"
                         :key="key"
                         class="grid grid-cols-2 gap-4 py-2 border-b border-slate-700/50 last:border-0 hover:bg-slate-700/20 rounded transition-colors">
                         <div class="text-slate-400 font-medium">
-                            {{ typeof key === 'string' ? key.replace(/([A-Z])/g, ' $1').trim() : key }}
+                            {{ key.replace(/([A-Z])/g, ' $1').trim() }}
                         </div>
                         <div class="text-slate-300">{{ metadata[key as keyof ImageMetadata] }}</div>
                     </div>
@@ -239,10 +275,11 @@ watch(() => props.file, (newFile) => {
                     Camera Information
                 </h4>
                 <div class="space-y-2">
-                    <div v-for="key in ['camera', 'make', 'model', 'software']" :key="key"
+                    <div v-for="key in ['camera', 'make', 'model', 'software', 'lens', 'copyright', 'artist']"
+                        :key="key"
                         class="grid grid-cols-2 gap-4 py-2 border-b border-slate-700/50 last:border-0 hover:bg-slate-700/20 rounded transition-colors">
                         <div class="text-slate-400 font-medium">
-                            {{ typeof key === 'string' ? key.replace(/([A-Z])/g, ' $1').trim() : key }}
+                            {{ key.replace(/([A-Z])/g, ' $1').trim() }}
                         </div>
                         <div class="text-slate-300">{{ metadata[key as keyof ImageMetadata] }}</div>
                     </div>
@@ -260,10 +297,11 @@ watch(() => props.file, (newFile) => {
                     Photo Parameters
                 </h4>
                 <div class="space-y-2">
-                    <div v-for="key in ['exposureTime', 'aperture', 'iso', 'focalLength', 'flash']" :key="key"
+                    <div v-for="key in ['exposureTime', 'aperture', 'iso', 'focalLength', 'flash', 'meteringMode', 'whiteBalance', 'exposureProgram', 'exposureCompensation', 'focusMode', 'digitalZoom', 'shootingMode']"
+                        :key="key"
                         class="grid grid-cols-2 gap-4 py-2 border-b border-slate-700/50 last:border-0 hover:bg-slate-700/20 rounded transition-colors">
                         <div class="text-slate-400 font-medium">
-                            {{ typeof key === 'string' ? key.replace(/([A-Z])/g, ' $1').trim() : key }}
+                            {{ key.replace(/([A-Z])/g, ' $1').trim() }}
                         </div>
                         <div class="text-slate-300">{{ metadata[key as keyof ImageMetadata] }}</div>
                     </div>
@@ -283,10 +321,11 @@ watch(() => props.file, (newFile) => {
                     Location Data
                 </h4>
                 <div class="space-y-2">
-                    <div v-for="key in ['gpsLatitude', 'gpsLongitude', 'gpsAltitude']" :key="key"
+                    <div v-for="key in ['gpsLatitude', 'gpsLongitude', 'gpsAltitude', 'gpsTimestamp', 'gpsDirection', 'locationName']"
+                        :key="key"
                         class="grid grid-cols-2 gap-4 py-2 border-b border-slate-700/50 last:border-0 hover:bg-slate-700/20 rounded transition-colors">
                         <div class="text-slate-400 font-medium">
-                            {{ typeof key === 'string' ? key.replace(/([A-Z])/g, ' $1').trim() : key }}
+                            {{ key.replace(/([A-Z])/g, ' $1').trim() }}
                         </div>
                         <div class="text-slate-300">{{ metadata[key as keyof ImageMetadata] }}</div>
                     </div>
@@ -306,10 +345,11 @@ watch(() => props.file, (newFile) => {
                     Technical Details
                 </h4>
                 <div class="space-y-2">
-                    <div v-for="key in ['bitsPerSample', 'compression', 'category', 'format']" :key="key"
+                    <div v-for="key in ['bitsPerSample', 'compression', 'category', 'format', 'quality', 'rawFormat', 'histogram']"
+                        :key="key"
                         class="grid grid-cols-2 gap-4 py-2 border-b border-slate-700/50 last:border-0 hover:bg-slate-700/20 rounded transition-colors">
                         <div class="text-slate-400 font-medium">
-                            {{ typeof key === 'string' ? key.replace(/([A-Z])/g, ' $1').trim() : key }}
+                            {{ key.replace(/([A-Z])/g, ' $1').trim() }}
                         </div>
                         <div class="text-slate-300">{{ metadata[key as keyof ImageMetadata] }}</div>
                     </div>
