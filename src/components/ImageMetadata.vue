@@ -235,7 +235,8 @@ watch(() => props.file, (newFile: File | null) => {
                         <div class="text-slate-400 font-medium">
                             {{ key.replace(/([A-Z])/g, ' $1').trim() }}
                         </div>
-                        <div class="text-slate-300">{{ metadata[key as keyof ImageMetadata] }}</div>
+                        <div class="text-slate-300 [overflow-wrap:anywhere]">{{ metadata[key as keyof ImageMetadata] }}
+                        </div>
                     </div>
                 </div>
             </div>
