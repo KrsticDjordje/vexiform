@@ -17,6 +17,7 @@ const { isConverting, convertImage } = useImageConversion()
 const handleImageUpload = async (file: File) => {
   currentImage.value = file
   error.value = null
+  if (isConverting.value) return
   const result = await convertImage(file)
   if (result) {
     conversionResult.value = result

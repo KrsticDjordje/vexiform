@@ -1,5 +1,10 @@
-import type { ConversionResult } from '../types'
-import Jimp from 'jimp'
+import { Jimp } from 'jimp'
+
+interface ScanContext {
+  bitmap: {
+    data: Buffer | number[]
+  }
+}
 
 export async function processImage(file: File): Promise<Buffer> {
   return new Promise((resolve, reject) => {
@@ -25,16 +30,20 @@ export async function convertToSvg(buffer: Buffer): Promise<string> {
 
       const MAX_SIZE = 1000
       if (image.bitmap.width > MAX_SIZE || image.bitmap.height > MAX_SIZE) {
-        image.scaleToFit(MAX_SIZE, MAX_SIZE)
+        image.scale(MAX_SIZE / Math.max(image.bitmap.width, image.bitmap.height))
       }
 
-      // Чувамо димензије
       const width = image.bitmap.width
       const height = image.bitmap.height
 
-      // Функција за трејсовање једног канала
-      const traceChannel = async (channelImage: Jimp) => {
-        const buffer = await channelImage.getBufferAsync(Jimp.MIME_PNG)
+      const traceChannel = async (channelImage: any) => {
+        const buffer = await new Promise<Buffer>((resolve, reject) => {
+          channelImage.getBuffer('image/png', (err: Error | null, buf: Buffer) => {
+            if (err) reject(err)
+            else resolve(buf)
+          })
+        })
+
         return new Promise<string>((resolve, reject) => {
           Potrace.default.trace(buffer, {
             turdSize: 2,
@@ -51,15 +60,13 @@ export async function convertToSvg(buffer: Buffer): Promise<string> {
         })
       }
 
-      // Раздвајамо слику на канале и процесирамо сваки
       const channels = ['red', 'green', 'blue'] as const
       const paths: string[] = []
 
       for (const channel of channels) {
         const channelImage = image.clone()
 
-        // Издвајамо један канал
-        channelImage.scan(0, 0, width, height, function (x, y, idx) {
+        channelImage.scan(0, 0, width, height, function (this: ScanContext, _x: number, _y: number, idx: number) {
           const r = this.bitmap.data[idx + 0]
           const g = this.bitmap.data[idx + 1]
           const b = this.bitmap.data[idx + 2]
@@ -77,7 +84,6 @@ export async function convertToSvg(buffer: Buffer): Promise<string> {
               break
           }
 
-          // Постављамо праг за канал
           const threshold = 128
           const binary = value > threshold ? 255 : 0
 
@@ -86,10 +92,8 @@ export async function convertToSvg(buffer: Buffer): Promise<string> {
           this.bitmap.data[idx + 2] = binary
         })
 
-        // Трејсујемо канал
         const channelSvg = await traceChannel(channelImage)
 
-        // Извлачимо путање и додајемо боју
         const pathMatches = channelSvg.match(/<path[^>]*d="([^"]*)"[^>]*>/g) || []
         pathMatches.forEach(path => {
           const d = path.match(/d="([^"]*)"/)![1]
@@ -109,7 +113,6 @@ export async function convertToSvg(buffer: Buffer): Promise<string> {
         })
       }
 
-      // Комбинујемо све путање у финални SVG
       const finalSvg = `<?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg viewBox="0 0 ${width} ${height}" 
@@ -137,7 +140,7 @@ export function convertSvgToEps(svg: string): string {
   const cleanSvg = svg.replace(/<\?xml[^>]*\?>/, '').replace(/<!DOCTYPE[^>]*>/, '')
 
   const viewBoxMatch = cleanSvg.match(/viewBox="([^"]*)"/)
-  const [x, y, width, height] = viewBoxMatch ? viewBoxMatch[1].split(' ').map(Number) : [0, 0, 100, 100]
+  const [_x, _y, width, height] = viewBoxMatch ? viewBoxMatch[1].split(' ').map(Number) : [0, 0, 100, 100]
 
   const epsHeader = `%!PS-Adobe-3.0 EPSF-3.0
 %%BoundingBox: 0 0 ${width} ${height}

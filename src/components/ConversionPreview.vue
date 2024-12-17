@@ -9,7 +9,7 @@ const props = defineProps<{
   conversionResult: ConversionResult | null
 }>()
 
-const emit = defineEmits<{
+defineEmits<{
   (e: 'download', format: ExportFormat): void
 }>()
 
