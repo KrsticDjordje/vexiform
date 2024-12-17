@@ -1,28 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Feature, ProcessingMode } from '../types'
-
-const props = defineProps<{
-  mode: ProcessingMode
-}>()
-
-const vectorFeatures: Feature[] = [
-  {
-    title: 'Smart Vectorization',
-    description: 'Advanced AI-powered algorithms for precise vector conversion',
-    icon: '⚡'
-  },
-  {
-    title: 'Multiple Formats',
-    description: 'Export your vectors in SVG and EPS formats',
-    icon: '📦'
-  },
-  {
-    title: 'Color Preservation',
-    description: 'Maintains original color fidelity in vector output',
-    icon: '🎨'
-  }
-]
+import type { Feature } from '../types'
 
 const metadataFeatures: Feature[] = [
   {
@@ -37,25 +15,42 @@ const metadataFeatures: Feature[] = [
   },
   {
     title: 'Format Info',
-    description: 'Get detailed information about image format and encoding',
+    description: 'Get detailed information about image format and quality',
     icon: '📊'
+  },
+  {
+    title: 'Location Data',
+    description: 'Access GPS coordinates and location information',
+    icon: '📍'
+  },
+  {
+    title: 'Technical Details',
+    description: 'View advanced technical specifications',
+    icon: '⚙️'
+  },
+  {
+    title: 'Real-time Analysis',
+    description: 'Instant metadata extraction and display',
+    icon: '⚡'
   }
 ]
 
-const features = computed(() =>
-  props.mode === 'vectorize' ? vectorFeatures : metadataFeatures
-)
+const features = computed(() => metadataFeatures)
 </script>
 
 <template>
   <section class="py-12">
     <div class="container mx-auto px-4">
-      <h2 class="text-3xl font-bold text-center mb-12">
-        {{ mode === 'vectorize' ? 'Vector Conversion Features' : 'Metadata Analysis Features' }}
+      <h2 class="text-3xl font-bold text-center mb-4">
+        Metadata Analysis Features
       </h2>
+      <p class="text-slate-400 text-center mb-12 max-w-2xl mx-auto">
+        Discover everything about your images with our comprehensive metadata analysis tools
+      </p>
 
-      <div class="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-        <div v-for="feature in features" :key="feature.title" class="glass-card p-6 rounded-xl text-center">
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div v-for="feature in features" :key="feature.title"
+          class="glass-card p-6 rounded-xl hover:scale-105 transition-transform">
           <div class="text-4xl mb-4">{{ feature.icon }}</div>
           <h3 class="text-xl font-bold mb-2">{{ feature.title }}</h3>
           <p class="text-slate-400">{{ feature.description }}</p>
