@@ -14,7 +14,7 @@
       <nav class="hidden md:flex gap-8">
         <a href="#features" class="text-slate-300 hover:text-white transition-colors">Features</a>
         <a href="#how-it-works" class="text-slate-300 hover:text-white transition-colors">How it Works</a>
-        <a href="#pricing" class="text-slate-300 hover:text-white transition-colors">Pricing</a>
+        <a href="#donate" class="text-slate-300 hover:text-white transition-colors">Donate</a>
       </nav>
 
       <button class="neo-button px-6 py-2 text-cyan-400 font-medium">
